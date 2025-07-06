@@ -1,0 +1,172 @@
+[
+    {
+        "id": "fa4ffe1a5c9fd12e",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "02b9507f69a3df16",
+        "type": "telegram receiver",
+        "z": "fa4ffe1a5c9fd12e",
+        "name": "",
+        "bot": "ef70eaafbaa95813",
+        "saveDataDir": "",
+        "filterCommands": false,
+        "x": 130,
+        "y": 100,
+        "wires": [
+            [
+                "2d5abd52a7d2d397"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "46580139b9b0895a",
+        "type": "telegram sender",
+        "z": "fa4ffe1a5c9fd12e",
+        "name": "",
+        "bot": "ef70eaafbaa95813",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 690,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2d5abd52a7d2d397",
+        "type": "function",
+        "z": "fa4ffe1a5c9fd12e",
+        "name": "function 6",
+        "func": "global.set(\"gemini_response\", msg.payload.content);\nglobal.set(\"tele\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 100,
+        "wires": [
+            [
+                "99290cff858f4f9b"
+            ]
+        ]
+    },
+    {
+        "id": "99290cff858f4f9b",
+        "type": "function",
+        "z": "fa4ffe1a5c9fd12e",
+        "name": "function 9",
+        "func": "msg.headers = {\n    \"Content-Type\": \"application/json\"\n};\n\nmsg.method = \"POST\";\nmsg.url = \"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyATdVI59TbqVsT0vL7qid6SNd0wghu7bHI\";\n\n\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 100,
+        "wires": [
+            [
+                "9a450df8d7daa0b3"
+            ]
+        ]
+    },
+    {
+        "id": "10ccae18e4e36566",
+        "type": "http request",
+        "z": "fa4ffe1a5c9fd12e",
+        "name": "Call Gemini API",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyATdVI59TbqVsT0vL7qid6SNd0wghu7bHI",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 300,
+        "y": 240,
+        "wires": [
+            [
+                "d96a8461e7a5b08c"
+            ]
+        ]
+    },
+    {
+        "id": "9a450df8d7daa0b3",
+        "type": "function",
+        "z": "fa4ffe1a5c9fd12e",
+        "name": "function 2",
+        "func": "let newText = global.get(\"gemini_response\");\n\nmsg.payload = {\n    // systemPrompt: \"Act as a tripmate. Only respond to trip-related queries and provide helpful travel advice, recommendations, or information.\", // Added system prompt\n    contents: [\n        {\n            parts: [\n                {\n                    text: newText\n                }\n            ]\n        }\n    ]\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 100,
+        "y": 240,
+        "wires": [
+            [
+                "10ccae18e4e36566"
+            ]
+        ]
+    },
+    {
+        "id": "d96a8461e7a5b08c",
+        "type": "function",
+        "z": "fa4ffe1a5c9fd12e",
+        "name": "function 3",
+        "func": "\nlet new_msg = {};\nnew_msg.payload = global.get(\"tele\");\nnew_msg.payload.content = msg.payload.candidates[0].content.parts[0].text;\nnew_msg.payload.type = \"message\";\nreturn new_msg;\n\n// let new_msg0;\n// msg.payload = {\n//   chatId: YOUR_CHAT_ID,\n//   type: \"message\",  // or \"photo\", \"document\", etc.\n//   content: \"Your message goes here\"\n// };\n// return msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 240,
+        "wires": [
+            [
+                "46580139b9b0895a"
+            ]
+        ]
+    },
+    {
+        "id": "ef70eaafbaa95813",
+        "type": "telegram bot",
+        "botname": "Trevor",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "testenvironment": false,
+        "updatemode": "polling",
+        "pollinterval": 300,
+        "usesocks": false,
+        "sockshost": "",
+        "socksprotocol": "socks5",
+        "socksport": 6667,
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbothost": "0.0.0.0",
+        "localbotport": 8443,
+        "publicbotport": 8443,
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    }
+]
