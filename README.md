@@ -22,8 +22,8 @@ A Telegram chatbot powered by Google's Gemini API, hosted on Node-RED. This proj
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/telegram-gemini-bot.git
-   cd telegram-gemini-bot
+   git clone https://github.com/yosh-s/Telegram-Chatbot-with-Gemini-AI-on-Node-RED.git
+   cd Telegram-Chatbot-with-Gemini-AI-on-Node-RED
    ```
 
 2. Import the `flows.json` into Node-RED.
